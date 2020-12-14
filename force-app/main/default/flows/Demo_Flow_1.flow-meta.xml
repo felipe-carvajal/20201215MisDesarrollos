@@ -5,7 +5,7 @@
         <name>Activate_Fourth_Step</name>
         <label>Activate_Fourth_Step</label>
         <locationX>176</locationX>
-        <locationY>758</locationY>
+        <locationY>878</locationY>
         <assignmentItems>
             <assignToReference>$Flow.CurrentStage</assignToReference>
             <operator>Assign</operator>
@@ -30,14 +30,14 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>scr_2</targetReference>
+            <targetReference>Flow_AccountRd</targetReference>
         </connector>
     </assignments>
     <assignments>
         <name>Activate_Third_Step</name>
         <label>Activate_Third_Step</label>
         <locationX>176</locationX>
-        <locationY>518</locationY>
+        <locationY>638</locationY>
         <assignmentItems>
             <assignToReference>$Flow.CurrentStage</assignToReference>
             <operator>Assign</operator>
@@ -70,6 +70,27 @@
         </value>
     </processMetadataValues>
     <processType>Flow</processType>
+    <recordLookups>
+        <name>Flow_AccountRd</name>
+        <label>Flow_AccountRd</label>
+        <locationX>176</locationX>
+        <locationY>398</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>scr_2</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Scr1_LookUp1.selectedValue</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <screens>
         <name>scr_1</name>
         <label>scr_1</label>
@@ -100,6 +121,42 @@
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
+        <fields>
+            <name>Scr1_Text</name>
+            <fieldText>&lt;p&gt;Thank you for Calling, please tell me your account number&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Scr1_LookUp1</name>
+            <extensionName>mp35:lookupFSC</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>objectName</name>
+                <value>
+                    <stringValue>Account</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>displayFieldName</name>
+                <value>
+                    <stringValue>Account_Number__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Account Number</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>selectedValue</name>
+                <value>
+                    <stringValue>Id</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -107,7 +164,7 @@
         <name>scr_2</name>
         <label>scr_2</label>
         <locationX>176</locationX>
-        <locationY>398</locationY>
+        <locationY>518</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -133,6 +190,36 @@
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
+        <fields>
+            <name>Scr2_Text</name>
+            <fieldText>&lt;p&gt;For {!Scr1_LookUp1.selectedValue}&lt;/p&gt;&lt;p&gt;Account Name: {!Flow_AccountRd.Name}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>scr_2_NavBut</name>
+            <extensionName>c:navigationButtonFSC</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Open Account</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>targetRecordId</name>
+                <value>
+                    <elementReference>Scr1_LookUp1.selectedValue</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>destinationType</name>
+                <value>
+                    <stringValue>record</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -140,7 +227,7 @@
         <name>scr_3</name>
         <label>scr_3</label>
         <locationX>176</locationX>
-        <locationY>638</locationY>
+        <locationY>758</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -173,7 +260,7 @@
         <name>scr_4</name>
         <label>scr_4</label>
         <locationX>176</locationX>
-        <locationY>878</locationY>
+        <locationY>998</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -230,5 +317,20 @@
             <targetReference>scr_1</targetReference>
         </connector>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
+    <variables>
+        <name>flow_Acc_Number</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>flw_Acc_Rec</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Account</objectType>
+    </variables>
 </Flow>
